@@ -1,90 +1,59 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Eye, Lock, Users, FileText, Mail } from "lucide-react";
 import handyman from "@/assets/handyman.png";
 
+interface PrivacySection {
+  id: string;
+  section_title: string;
+  section_content: string;
+  section_order: number;
+  last_updated: string;
+  effective_date: string;
+  created_at: string;
+  updated_at: string;
+}
 
-const sections = [
-  {
-    id: "information-collection",
-    title: "Information We Collect",
-    icon: FileText,
-    content: [
-      "Personal information you provide when creating an account (name, email, phone number, address)",
-      "Service requests and booking details",
-      "Payment information (processed securely through encrypted payment processors)",
-      "Communication records between you and our service providers",
-      "Device information and usage data when you visit our website or use our app",
-      "Location data when you enable location services for service booking"
-    ]
-  },
-  {
-    id: "information-use",
-    title: "How We Use Your Information",
-    icon: Users,
-    content: [
-      "To provide and improve our home service platform",
-      "To match you with qualified service professionals in your area",
-      "To process payments and manage your account",
-      "To communicate with you about services, bookings, and updates",
-      "To ensure the safety and security of our platform",
-      "To analyze usage patterns and improve our services",
-      "To comply with legal obligations and prevent fraud"
-    ]
-  },
-  {
-    id: "information-sharing",
-    title: "Information Sharing",
-    icon: Shield,
-    content: [
-      "With service professionals when you book a service (limited to necessary contact and job details)",
-      "With payment processors to handle transactions securely",
-      "With third-party service providers who help us operate our platform",
-      "When required by law or to protect our rights and safety",
-      "In connection with a business transfer or acquisition",
-      "We never sell your personal information to third parties for marketing purposes"
-    ]
-  },
-  {
-    id: "data-security",
-    title: "Data Security",
-    icon: Lock,
-    content: [
-      "We use industry-standard encryption to protect your data in transit and at rest",
-      "Regular security audits and vulnerability assessments",
-      "Secure payment processing through PCI-compliant providers",
-      "Limited access to personal information on a need-to-know basis",
-      "Regular employee training on data protection and privacy practices",
-      "Incident response procedures in case of any security events"
-    ]
-  },
-  {
-    id: "your-rights",
-    title: "Your Rights and Choices",
-    icon: Eye,
-    content: [
-      "Access: Request a copy of the personal information we have about you",
-      "Correction: Request correction of inaccurate or incomplete information",
-      "Deletion: Request deletion of your personal information (subject to legal requirements)",
-      "Portability: Request a copy of your data in a machine-readable format",
-      "Opt-out: Unsubscribe from marketing communications at any time",
-      "Account deletion: Close your account and delete associated data"
-    ]
-  },
-  {
-    id: "contact-privacy",
-    title: "Privacy Contact Information",
-    icon: Mail,
-    content: [
-      "For privacy-related questions or requests, contact us at:",
-      "Email: privacy@homeservepro.com",
-      "Phone: 1-800-HOME-PRO (press 3 for privacy inquiries)",
-      "Mail: HomeServe Pro Privacy Team, 123 Business Ave, Suite 500, New York, NY 10001",
-      "We will respond to all privacy requests within 30 days"
-    ]
-  }
-];
+const icons = [FileText, Users, Shield, Lock, Eye, Mail];
 
 export default function Privacy() {
+  const [sections, setSections] = useState<PrivacySection[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchPrivacy = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch("https://back-end-for-xirfadsan.onrender.com/api/privacy/all");
+        if (!res.ok) throw new Error(`Failed to fetch: ${res.status}`);
+        const data = await res.json();
+        setSections(data);
+      } catch (err) {
+        console.error("❌ Error fetching privacy policy:", err);
+        setError("Failed to load privacy policy.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPrivacy();
+  }, []);
+
+  if (loading)
+    return (
+      <div className="min-h-screen flex items-center justify-center text-lg">
+        Loading Privacy Policy...
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="min-h-screen flex items-center justify-center text-red-600">
+        {error}
+      </div>
+    );
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -98,11 +67,13 @@ export default function Privacy() {
               Your privacy is important to us. This policy explains how we collect, use,
               and protect your personal information when you use HomeServe Pro.
             </p>
-            <div className="mt-8 flex items-center justify-center gap-x-4 text-sm text-primary-foreground/90">
-              <span>Last updated: March 15, 2024</span>
-              <span>•</span>
-              <span>Effective: March 15, 2024</span>
-            </div>
+            {sections.length > 0 && (
+              <div className="mt-8 flex items-center justify-center gap-x-4 text-sm text-primary-foreground/90">
+                <span>Last updated: {sections[0].last_updated}</span>
+                <span>•</span>
+                <span>Effective: {sections[0].effective_date}</span>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -159,84 +130,50 @@ export default function Privacy() {
       <section className="bg-muted py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-4xl space-y-8">
-            {sections.map((section, index) => (
-              <Card key={section.id} className="bg-gradient-card border-0 shadow-md animate-fade-in" style={{ animationDelay: `${index * 0.1}s` }}>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-x-3 text-xl">
-                    <section.icon className="h-5 w-5 text-primary" />
-                    {section.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
-                    {section.content.map((item, itemIndex) => (
-                      <li key={itemIndex} className="text-muted-foreground leading-7">
-                        {item.includes(':') ? (
-                          <span>
-                            <strong className="text-foreground">{item.split(':')[0]}:</strong>
-                            {item.split(':').slice(1).join(':')}
-                          </span>
-                        ) : (
-                          <span>• {item}</span>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+            {sections.map((section, index) => {
+              const Icon = icons[index % icons.length];
+              const lines = section.section_content
+                .split("\n")
+                .filter((line) => line.trim() !== "");
 
-      {/* Data Retention */}
-      <section className="py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl">
-            <Card className="bg-gradient-card border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-2xl">Data Retention</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground leading-7">
-                  We retain your personal information only as long as necessary to provide our services
-                  and comply with legal obligations:
-                </p>
-                <ul className="space-y-3 text-muted-foreground">
-                  <li>• <strong className="text-foreground">Account Information:</strong> Retained while your account is active and for 3 years after closure</li>
-                  <li>• <strong className="text-foreground">Service Records:</strong> Kept for 7 years for warranty and legal purposes</li>
-                  <li>• <strong className="text-foreground">Payment Information:</strong> Processed data is not stored; transaction records kept for 7 years</li>
-                  <li>• <strong className="text-foreground">Communication Records:</strong> Retained for 2 years for quality assurance</li>
-                  <li>• <strong className="text-foreground">Marketing Data:</strong> Deleted immediately upon opting out</li>
-                </ul>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+              return (
+                <Card
+                  key={section.id}
+                  className="bg-gradient-card border-0 shadow-md animate-fade-in"
+                  style={{ animationDelay: `${index * 0.1}s` }}
+                >
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-x-3 text-xl">
+                      <Icon className="h-5 w-5 text-primary" />
+                      {section.section_title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <ul className="space-y-3">
+                      {lines.map((line, i) => {
+                        const [beforeColon, afterColon] = line.split(/:(.+)/); // split at first :
+                        const hasColon = line.includes(":");
 
-      {/* International Users */}
-      <section className="bg-muted py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl">
-            <Card className="bg-gradient-card border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="text-2xl">International Users</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-muted-foreground leading-7">
-                  HomeServe Pro is based in the United States. If you are accessing our services
-                  from outside the US, please note:
-                </p>
-                <ul className="space-y-3 text-muted-foreground">
-                  <li>• Your information may be transferred to and processed in the United States</li>
-                  <li>• We comply with applicable international privacy laws, including GDPR for EU residents</li>
-                  <li>• EU residents have additional rights under GDPR, including the right to data portability</li>
-                  <li>• We use appropriate safeguards for international data transfers</li>
-                  <li>• Contact our privacy team for region-specific privacy information</li>
-                </ul>
-              </CardContent>
-            </Card>
+                        return (
+                          <li key={i} className="text-muted-foreground leading-7">
+                            {hasColon ? (
+                              <>
+                                <span className="font-bold text-white">
+                                  {beforeColon}:
+                                </span>{" "}
+                                {afterColon?.trim()}
+                              </>
+                            ) : (
+                              <span>• {line}</span>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -266,15 +203,12 @@ export default function Privacy() {
         </div>
       </section>
 
-
       {/* CTA Section */}
-      <section className="bg-muted/30 flex items-end overflow-hidden pt-[20px] md:pt-[240px]  pb-[50px] h-fit">
+      <section className="bg-muted/30 flex items-end overflow-hidden pt-[20px] md:pt-[240px] pb-[50px] h-fit">
         <div className="flex items-end w-full max-w-7xl mx-auto px-6 lg:px-8">
           <div className="relative w-full bg-[#FF5B22] rounded-lg flex flex-col md:flex-row items-end justify-between px-6 md:px-12 py-22 md:py-24">
-
-            {/* Left: Text Content */}
             <div className="text-white max-w-xl">
-              <h2 className="text-3xl sm:text-4xl font-bold leading-aung py-10 mb-2 md:mb-6 text-center md:text-left">
+              <h2 className="text-3xl sm:text-4xl font-bold py-10 mb-6 text-center md:text-left">
                 Your Reliable Trusted <br />
                 Handyman is Just One <br />
                 Call Away!
@@ -286,19 +220,16 @@ export default function Privacy() {
               </div>
             </div>
 
-            {/* Right: Handyman Image */}
-            <div className="md:absolute  mt-10 md:mt-0 bottom-0 right-[20px] md:right-[20px] z-20">
+            <div className="md:absolute mt-10 md:mt-0 bottom-0 right-[20px] z-20">
               <img
                 src={handyman}
                 alt="Handyman CTA"
-                className="w-[563.333px] md:w-[563.4px]  h-auto object-contain"
+                className="w-[563.333px] md:w-[563.4px] h-auto object-contain"
               />
             </div>
           </div>
         </div>
       </section>
-
-
     </div>
   );
 }
