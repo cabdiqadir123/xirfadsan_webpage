@@ -532,9 +532,11 @@ export default function Home() {
                       {blog.description}
                     </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-[#0D0100] hover:text-[#FF4B01] cursor-pointer">
-                        Learn More
-                      </span>
+                      <Link to={`/blog/${blog.id}`} className="hover:text-foreground transition-colors">
+                        <span className="text-[#0D0100] hover:text-[#FF4B01] cursor-pointer">
+                          Learn More
+                        </span>
+                      </Link>
                       <div className="text-xs text-[#524E4E] px-4 py-2 border-2 border-[#524E4E] rounded-full">
                         {new Date(blog.created_at).toLocaleDateString('en-GB', {
                           day: '2-digit',
