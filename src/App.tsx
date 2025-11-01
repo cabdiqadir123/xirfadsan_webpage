@@ -8,6 +8,7 @@ import { Navigation } from "@/components/navigation";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Blog from "./pages/Blog";
+import BlogDetails from "./pages/BlogDetails";
 import Contact from "./pages/Contact";
 import Privacy from "./pages/Privacy";
 import DeleteAccount from "./pages/DeleteAccount";
@@ -32,6 +33,7 @@ const App = () => (
                 <Route path="/service" element={<Service />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:id" element={<BlogDetails />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/delete-account" element={<DeleteAccount />} />
