@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CheckCircle, ArrowUpRight, Linkedin, Clock, Star, Shield, Wrench, Zap, Sparkles, Home, Paintbrush, Award, TreePine, Leaf, Package, Icon } from "lucide-react";
 // import { FaLinkedin } from "react-icons/fa";
 import Solution from "@/assets/Solution.png";
@@ -185,44 +185,44 @@ const whyChooseUs = [
 ];
 
 
-const TeamMember = [
-  {
-    name: "Martin Garrix",
-    role: "Product Manager",
-    image: tm1,
-    linkedin: "#",
-  },
-  {
-    name: "Anna Smith",
-    role: "Operations Specialist",
-    image: tm2,
-    linkedin: "#",
-  },
-  {
-    name: "Jessica Brown",
-    role: "Pest Control Expert",
-    image: tm3,
-    linkedin: "#",
-  },
-  {
-    name: "David Johnson",
-    role: "Field Technician",
-    image: tm4,
-    linkedin: "#",
-  },
-  {
-    name: "Michael Lee",
-    role: "Senior Exterminator",
-    image: tm5,
-    linkedin: "#",
-  },
-  {
-    name: "Sophia Chen",
-    role: "Customer Support",
-    image: tm6,
-    linkedin: "#",
-  },
-];
+// const TeamMember = [
+//   {
+//     name: "Martin Garrix",
+//     role: "Product Manager",
+//     image: tm1,
+//     linkedin: "#",
+//   },
+//   {
+//     name: "Anna Smith",
+//     role: "Operations Specialist",
+//     image: tm2,
+//     linkedin: "#",
+//   },
+//   {
+//     name: "Jessica Brown",
+//     role: "Pest Control Expert",
+//     image: tm3,
+//     linkedin: "#",
+//   },
+//   {
+//     name: "David Johnson",
+//     role: "Field Technician",
+//     image: tm4,
+//     linkedin: "#",
+//   },
+//   {
+//     name: "Michael Lee",
+//     role: "Senior Exterminator",
+//     image: tm5,
+//     linkedin: "#",
+//   },
+//   {
+//     name: "Sophia Chen",
+//     role: "Customer Support",
+//     image: tm6,
+//     linkedin: "#",
+//   },
+// ];
 
 
 
@@ -230,10 +230,31 @@ const TeamMember = [
 
 export default function Services() {
   const [active, setActive] = useState(0);
+  const [TeamMember, setTeamMember] = useState([]);
+  const [oading, setLoading] = useState(true);
+
+  // ✅ Fetch blogs from backend
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch("https://back-end-for-xirfadsan.onrender.com/api/member/allNew");
+        if (!response.ok) throw new Error("Failed to load services");
+        const data = await response.json();
+        setTeamMember(data);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="md:h-[550px] h-fitt md:mb-[180px] mb:[50px]  relative bg-primary py-16 md:px-10 px-8 overflow-visible">
+      <section className="md:h-[250px] h-fitt md:mb-[180px] mb:[50px]  relative bg-primary py-16 md:px-10 px-8 overflow-visible">
         <div className="mx-auto max-w-6xl px-6 lg:px-8 text-center">
           {/* Title & Subtitle */}
           <h2 className="text-4xl lg:text-6xl font-bold text-white mb-6 leading-tight animate-slide-up">
@@ -246,7 +267,7 @@ export default function Services() {
         </div>
 
         {/* Video Section */}
-        <div className="relative mt-10 flex justify-center animate-slide-up">
+        {/* <div className="relative mt-10 flex justify-center animate-slide-up">
           <div className="w-full max-w-5xl rounded-xl overflow-hidden">
             <iframe
               className="w-full md:h-[550px] h-[300px]"
@@ -258,7 +279,7 @@ export default function Services() {
               allowFullScreen
             ></iframe>
           </div>
-        </div>
+        </div> */}
       </section>
 
       {/* Solution Section */}
@@ -396,7 +417,7 @@ export default function Services() {
                 {/* Background image */}
                 <div
                   className="transition-transform duration-300 group-hover:scale-110 h-80 bg-cover bg-center"
-                  style={{ backgroundImage: `url(${member.image})` }}
+                  style={{ backgroundImage: `url(${'https://back-end-for-xirfadsan.onrender.com/api/member/image/'+member.id})` }}
                 ></div>
 
                 {/* Overlay info (hidden until hover) */}
@@ -408,9 +429,9 @@ export default function Services() {
                       </h3>
                       <p className="text-gray-200 text-sm">{member.role}</p>
                     </div>
-                    {member.linkedin && (
+                    {member.linkedin_profile && (
                       <a
-                        href={member.linkedin}
+                        href={member.linkedin_profile}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="bg-white p-2 rounded-md text-blue-600 hover:bg-blue-50"

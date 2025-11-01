@@ -22,6 +22,7 @@ import appImage from "@/assets/app-mockup.png";
 import playIcon from "@/assets/playstore-icon.png";
 import appleIcon from "@/assets/appstore-icon.png";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 
 
@@ -52,118 +53,6 @@ const highlights = [
   "Committed to quality.",
 ];
 
-// Mock data for handyman services
-// const services = [
-//   {
-//     title: "Window Replacement",
-//     description: "Improve energy efficiency and aesthetics with our selection of high-quality windows.",
-//     image: b1,
-//   },
-//   {
-//     title: "Interior Painting",
-//     description: "Refresh your home's interior with our expert painting services, tailored to your style.",
-//     image: b2,
-//   },
-//   {
-//     title: "Flooring Installation",
-//     description: "Transform your space with professional flooring installation, from hardwood to laminate.",
-//     image: b3,
-//   },
-//   {
-//     title: "Plumbing Repairs",
-//     description: "Keep your water systems running smoothly with our reliable and efficient plumbing solutions.",
-//     image: b4,
-//   },
-//   {
-//     title: "Pest Control",
-//     description: "Protect your home from unwanted pests with our effective and safe pest control solutions.",
-//     image: b5,
-//   },
-//   {
-//     title: "Landscaping Design",
-//     description: "Enhance your outdoor space with our professional landscaping and garden design services.",
-//     image: b6,
-//   },
-// ];
-
-
-// Mock Data
-const testimonial = [
-  {
-    title: "Great value for money!",
-    content:
-      "I was genuinely pleasantly surprised by the exceptional quality of service provided at such a competitive rate.",
-    author: "Olivia Martinez",
-    role: "Operations Manager, GreenEarth",
-    image: i1,
-  },
-  {
-    title: "Reliable and efficient!",
-    content:
-      "The staff was incredibly polite and went above and beyond to ensure that I was completely satisfied with.",
-    author: "Michael Chen",
-    role: "Lead Developer, CodeCraft",
-    image: i2,
-  },
-  {
-    title: "Exceptional customer service!",
-    content:
-      "I had an urgent last-minute need for a thorough deep clean before hosting guests, and Handgrid truly came.",
-    author: "Sophia Turner",
-    role: "Chief Marketing Officer, EcoStyle",
-    image: i3,
-  },
-  {
-    title: "sayid value for money!",
-    content:
-      "I was genuinely pleasantly surprised by the exceptional quality of service provided at such a competitive rate.",
-    author: "Olivia Martinez",
-    role: "Operations Manager, GreenEarth",
-    image: i1,
-  },
-  {
-    title: "omar and efficient!",
-    content:
-      "The staff was incredibly polite and went above and beyond to ensure that I was completely satisfied with.",
-    author: "Michael Chen",
-    role: "Lead Developer, CodeCraft",
-    image: i2,
-  },
-  {
-    title: "ahmed customer service!",
-    content:
-      "I had an urgent last-minute need for a thorough deep clean before hosting guests, and Handgrid truly came.",
-    author: "Sophia Turner",
-    role: "Chief Marketing Officer, EcoStyle",
-    image: i3,
-  },
-];
-
-
-// Mock data for blogs
-// const blogs = [
-//   {
-//     title: "12 Essential Tools Every Homeowner Should Have Ready",
-//     description: "Tools save time and money on repairs. This blog covers must-have items for maintenance.",
-//     image: bl1,
-//     date: "Feb 26, 2025"
-//   },
-//   {
-//     title: "Winter Seasonal Maintenance Tips for Your Home",
-//     description: "Prepare your home for colder months with essential maintenance tasks.",
-//     image: bl2,
-//     date: "Feb 20, 2025"
-//   },
-//   {
-//     title: "Top Exciting Trends in Home Décor for 2026",
-//     description: "Stay ahead of the curve with the latest styles and design inspirations.",
-//     image: bl3,
-//     date: "Feb 15, 2025"
-//   }
-// ];
-
-
-
 export default function Home() {
   const [index, setIndex] = useState(0);
   const itemsPerPage = 3;
@@ -171,8 +60,6 @@ export default function Home() {
   const nextSlide = () => {
     setIndex((prev) => (prev + itemsPerPage) % testimonial.length);
   };
-
-  const currentTestimonials = testimonial.slice(index, index + itemsPerPage);
 
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -219,6 +106,31 @@ export default function Home() {
   }, []);
 
 
+  const [testimonial, settestimonial] = useState([]);
+  const [t_loading, sett_Loading] = useState(true);
+
+  // ✅ Fetch blogs from backend
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch("https://back-end-for-xirfadsan.onrender.com/api/testimonial/all");
+        if (!response.ok) throw new Error("Failed to load services");
+        const data = await response.json();
+        settestimonial(data);
+      } catch (err) {
+        console.log(err.message);
+      } finally {
+        sett_Loading(false);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  const currentTestimonials = testimonial.slice(index, index + itemsPerPage);
+
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
@@ -245,12 +157,16 @@ export default function Home() {
                 From leaky faucets to full renovations, we handle it all with expertise and care. Your home is in good hands.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" className="bg-primary hover:bg-primary-dark text-white font-semibold">
-                  Call us: +252 614057904
-                </Button>
-                <Button size="lg" variant="outline" className="border-white/30 bg-white/10 text-white hover:bg-white hover:text-foreground backdrop-blur-sm">
-                  Learn More
-                </Button>
+                <Link to="/contact" className="hover:text-foreground transition-colors">
+                  <Button size="lg" className="bg-primary hover:bg-primary-dark text-white font-semibold">
+                    Call us: +252 614057904
+                  </Button>
+                </Link>
+                <Link to="/blog" className="hover:text-foreground transition-colors">
+                  <Button size="lg" variant="outline" className="border-white/30 bg-white/10 text-white hover:bg-white hover:text-foreground backdrop-blur-sm">
+                    Learn More
+                  </Button>
+                </Link>
               </div>
 
               {/* Trust Indicators */}
@@ -274,11 +190,11 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
 
       {/* Benefits Section */}
-      <section className="py-16 bg-muted/30">
+      < section className="py-16 bg-muted/30" >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 max-w-xl  gap-x-8 gap-y-12 lg:max-w-none ">
             {benefits.map((benefit, index) => (
@@ -296,10 +212,10 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Solution Section */}
-      <section className="bg-muted/30 py-24 sm:py-32">
+      < section className="bg-muted/30 py-24 sm:py-32" >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="relative">
@@ -333,10 +249,10 @@ export default function Home() {
             </div> */}
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Stats Section */}
-      <section className="bg-muted/30 py-16">
+      < section className="bg-muted/30 py-16" >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-12 items-start">
             {/* Left Column */}
@@ -369,10 +285,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Customer Satisfaction Section */}
-      <section className="bg-muted/30 py-16">
+      < section className="bg-muted/30 py-16" >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="rounded-3xl p-8 lg:p-12 grid lg:grid-cols-2 gap-8 items-center" style={{ backgroundColor: '#FDD867' }}>
             <div>
@@ -391,9 +307,11 @@ export default function Home() {
                   <span className="text-black">Quality materials and tools</span>
                 </div>
               </div>
-              <Button className="bg-orange hover:bg-red-700 text-white border-0 rounded-full">
-                Explore Our Services
-              </Button>
+              <Link to="/service" className="hover:text-foreground transition-colors">
+                <Button className="bg-orange hover:bg-red-700 text-white border-0 rounded-full">
+                  Explore Our Services
+                </Button>
+              </Link>
             </div>
             <div className="relative group">
               <div className="aspect-square rounded-2xl  bg-white/10 relative">
@@ -420,10 +338,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Services Grid Section */}
-      <section className="py-16 bg-muted/30">
+      < section className="py-16 bg-muted/30" >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">Our Handyman Services</h2>
@@ -455,13 +373,15 @@ export default function Home() {
             </div>
           )}
           <div className="text-center">
-            <Button className="rounded-full px-5 bg-orange hover:bg-secondary text-white">Load More</Button>
+            <Link to="/service" className="hover:text-foreground transition-colors">
+              <Button className="rounded-full px-5 bg-orange hover:bg-secondary text-white">Load More</Button>
+            </Link>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* How HandGrid Works Section */}
-      <section className="bg-muted/30 py-16">
+      < section className="bg-muted/30 py-16" >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">How HandGrid works</h2>
@@ -502,11 +422,11 @@ export default function Home() {
             </Card>
           </div>
         </div>
-      </section>
+      </section >
 
 
       {/* Testimonials Section */}
-      <section className="bg-muted/30 py-24 sm:py-32 overflow-hidden">
+      < section className="bg-muted/30 py-24 sm:py-32 overflow-hidden" >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center mb-16">
             <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -541,7 +461,7 @@ export default function Home() {
                         {t.title}
                       </h3>
                       <p className="text-muted-foreground text-sm leading-6">
-                        {t.content}
+                        {t.description}
                       </p>
                     </div>
                     <div className="mt-6 flex items-center gap-x-3">
@@ -552,7 +472,7 @@ export default function Home() {
                       />
                       <div>
                         <p className="font-semibold text-foreground">
-                          {t.author}
+                          {t.name}
                         </p>
                         <p className="text-sm text-muted-foreground">{t.role}</p>
                       </div>
@@ -579,11 +499,11 @@ export default function Home() {
             ></button>
           </div>
         </div>
-      </section>
+      </section >
 
 
       {/* Blog Section */}
-      <section className="py-16 bg-muted/30">
+      < section className="py-16 bg-muted/30" >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-foreground mb-4">Latest from our blog</h2>
@@ -616,7 +536,11 @@ export default function Home() {
                         Learn More
                       </span>
                       <div className="text-xs text-[#524E4E] px-4 py-2 border-2 border-[#524E4E] rounded-full">
-                        {blog.date}
+                        {new Date(blog.created_at).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: '2-digit',
+                          year: 'numeric'
+                        })}
                       </div>
                     </div>
                   </div>
@@ -631,13 +555,13 @@ export default function Home() {
             </Button>
           </div>
         </div>
-      </section>
+      </section >
 
 
       {/* Download our application Section */}
-      <section className="relative overflow-hidden bg-background py-16 md:py-24 flex flex-col items-center text-center px-4 sm:px-8 md:px-16">
+      < section className="relative overflow-hidden bg-background py-16 md:py-24 flex flex-col items-center text-center px-4 sm:px-8 md:px-16" >
         {/* Text Section */}
-        <div className="max-w-2xl">
+        < div className="max-w-2xl" >
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-foreground">
             Simplify Your <span className="text-primary">Home Services</span> <br className="hidden sm:block" />
             with the Xirfadsan App
@@ -651,7 +575,7 @@ export default function Home() {
           {/* Store Buttons */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 mt-8">
             <a
-              href="#"
+              href="https://play.google.com/store/apps/details?id=com.xirfadsan.service"
               className="flex items-center justify-center gap-2 bg-black text-white px-6 py-3 rounded-full 
                    hover:scale-105 transition-transform duration-200 w-full sm:w-auto"
             >
@@ -668,12 +592,12 @@ export default function Home() {
               <span className="text-sm font-medium">App Store</span>
             </a>
           </div>
-        </div>
-      </section>
+        </div >
+      </section >
 
 
       {/* CTA Section */}
-      <section className="bg-muted/30 flex items-end overflow-hidden pt-[20px] md:pt-[240px]  pb-[50px] h-fit">
+      < section className="bg-muted/30 flex items-end overflow-hidden pt-[20px] md:pt-[240px]  pb-[50px] h-fit" >
         <div className="flex items-end w-full max-w-7xl mx-auto px-6 lg:px-8">
           <div className="relative w-full bg-[#FF5B22] rounded-lg flex flex-col md:flex-row items-end justify-between px-6 md:px-12 py-22 md:py-24">
 
@@ -701,10 +625,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
 
 
-    </div>
+    </div >
   );
 }

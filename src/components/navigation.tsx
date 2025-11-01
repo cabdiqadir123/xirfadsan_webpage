@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Menu, X } from "lucide-react";
@@ -79,9 +79,11 @@ export function Navigation() {
         {/* Desktop Right Section */}
         <div className="hidden md:flex lg:flex-1 lg:justify-end lg:gap-x-4">
           <ThemeToggle />
-          <Button size="sm" className="bg-primary hover:bg-primary-dark text-primary-foreground font-medium">
-            Call us: +252 614057904
-          </Button>
+          <Link to="/contact" className="hover:text-foreground transition-colors">
+            <Button size="sm" className="bg-primary hover:bg-primary-dark text-primary-foreground font-medium">
+              Call us: +252 614057904
+            </Button>
+          </Link>
         </div>
       </nav>
 
