@@ -3,7 +3,7 @@ import { NavLink, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Menu, X } from "lucide-react";
-
+import logo from "@/assets/Xirfadsan-logo.png";
 const navigation = [
   { name: "Home", href: "/" },
   { name: "Service", href: "/Service" },
@@ -37,7 +37,7 @@ export function Navigation() {
           <NavLink to="/" className="-m-1.5 p-1.5 rounded-lg flex items-center space-x-2">
             <div className="h-8 w-8 bg-white rounded-lg flex items-center justify-center">
               <img
-                src="src/assets/Xirfadsan-logo.png"
+                src={logo}
                 alt="logo"
                 className="w-6 h-6 object-contain"
               />
