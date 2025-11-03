@@ -288,7 +288,7 @@ export default function Home() {
       </section >
 
       {/* Customer Satisfaction Section */}
-      < section className="bg-muted/30 py-16" >
+      {/* < section className="bg-muted/30 py-16" >
         <div className="mx-auto max-w-7xl px-6 lg:px-8">
           <div className="rounded-3xl p-8 lg:p-12 grid lg:grid-cols-2 gap-8 items-center" style={{ backgroundColor: '#FDD867' }}>
             <div>
@@ -338,7 +338,7 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section >
+      </section > */}
 
       {/* Services Grid Section */}
       < section className="py-16 bg-muted/30" >

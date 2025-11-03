@@ -402,7 +402,7 @@ export default function Services() {
       </section>
 
       {/* Introducing Our Skilled Exterminators Team */}
-      <section className="bg-muted/30 py-16 ">
+      {TeamMember.length > 1000 ? <section className="bg-muted/30 py-16 ">
         <div className="max-w-6xl mx-auto text-center px-6">
           <h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl mb-6">
             Introducing Our Skilled <br /> Exterminators Team
@@ -417,7 +417,7 @@ export default function Services() {
                 {/* Background image */}
                 <div
                   className="transition-transform duration-300 group-hover:scale-110 h-80 bg-cover bg-center"
-                  style={{ backgroundImage: `url(${'https://back-end-for-xirfadsan.onrender.com/api/member/image/'+member.id})` }}
+                  style={{ backgroundImage: `url(${'https://back-end-for-xirfadsan.onrender.com/api/member/image/' + member.id})` }}
                 ></div>
 
                 {/* Overlay info (hidden until hover) */}
@@ -445,7 +445,8 @@ export default function Services() {
             ))}
           </div>
         </div>
-      </section>
+      </section> : <div> </div>
+      }
 
       {/* CTA Section */}
       <section className="bg-muted/30 flex items-end overflow-hidden pt-[20px] md:pt-[240px]  pb-[50px] h-fit">
